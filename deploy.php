@@ -23,6 +23,10 @@ task('chown', function() {
     run('sudo chown -R root:www-data current');
 });
 
+task('database:migrate', function() {
+    run("php current/artisan migrate");
+});
+
 task('deploy', [
     'deploy:start',
     'deploy:prepare',
@@ -31,6 +35,7 @@ task('deploy', [
     'deploy:writeable_dirs',
     'deploy:vendors',
     'deploy:symlink',
+    'database:migrate',
     'cleanup',
     'deploy:end'
 ])->desc('Deploy your project');
