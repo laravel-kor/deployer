@@ -11,20 +11,35 @@ set('shared_files',[]);
 set('repository', 'https://github.com/laravel-kor/laravel.co.kr.git');
 set('writeable_dirs', ['app/storage']);
 
-task('chown', function() {
-    run('sudo chown -R root:www-data current');
-});
-
 task('database:migrate', function() {
     run("php current/artisan migrate");
 });
 
+/**
+ * Make writeable dirs
+ */
+task('deploy:writeable_dirs', function () {
+    $user = config()->getUser();
+    $wwwUser = config()->getWwwUser();
+    $releasePath = env()->getReleasePath();
+
+    cd($releasePath);
+
+    // User specified writeable dirs
+    $dirs = (array)get('writeable_dirs', []);
+
+    foreach ($dirs as $dir) {
+        run("chmod 0777 $dir");
+        run("chmod g+w $dir");
+    }
+})->desc('Make writeable dirs');
+
 task('laravel:create_storage_dirs', function() {
-    run("mkdir current/app/storage/sessions");
-    run("mkdir current/app/storage/views");
-    run("mkdir current/app/storage/meta");
-    run("mkdir current/app/storage/logs");
-    run("mkdir current/app/storage/cache");
+    $dirs = ['sessions','views','meta','logs','cache'];
+
+    foreach ($dirs as $dir) {
+        run('mkdir -p current/app/storage' . $dir);
+    }
 });
 
 task('deploy', [
