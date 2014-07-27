@@ -38,7 +38,8 @@ task('laravel:create_storage_dirs', function() {
     $dirs = ['sessions','views','meta','logs','cache'];
 
     foreach ($dirs as $dir) {
-        run('mkdir -p current/app/storage' . $dir);
+        $path = 'current/app/storage/' . $dir;
+        run("if [ ! -d \"$path\" ]; then mkdir -p $path; fi", true);
     }
 });
 
