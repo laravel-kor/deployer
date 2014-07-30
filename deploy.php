@@ -43,6 +43,10 @@ task('laravel:create_storage_dirs', function() {
     }
 });
 
+after('deploy', function() {
+    run('sudo service php5-fpm reload');
+});
+
 task('deploy', [
     'deploy:start',
     'deploy:prepare',
