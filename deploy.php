@@ -59,6 +59,6 @@ task('deploy', [
     'deploy:end'
 ])->desc('Deploy your project');
 
-after('deploy', function() {
-    run('sudo service php5-fpm restart');
-});
+// after('deploy', function() {
+//     run('sudo service php5-fpm restart');
+// });
